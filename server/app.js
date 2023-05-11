@@ -7,7 +7,7 @@ require("./config/db");
 const userRouter = require("./routes/user.routes");
 
 const app = express();
-app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173/" }));
+app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
