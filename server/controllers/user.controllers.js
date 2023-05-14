@@ -19,7 +19,7 @@ const createNewUser = async (req, res) => {
     const info = await sendEmail(emailMessage(email, token));
     // console.log(`"Accepted message: " ${info.accepted}`);
     if (info.accepted) {
-      console.log(image);
+      // console.log(image);
       return res.status(200).send({
         message: `A verification email has been sent to this email ${email} .
         Verification email will be expire after 5 Minutes.`,

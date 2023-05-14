@@ -1,13 +1,17 @@
 import { React, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { Button, Card, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+import { Navbar, Container, NavDropdown } from "react-bootstrap";
+import Loading from "../components/Loading";
+import Admin from "../components/Admin";
+import User from "../components/User";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
 
   const sendRequest = async (u_id) => {
     // console.log(`localStorage id: ${u_id}`);
@@ -22,7 +26,7 @@ const Dashboard = () => {
     if (res) {
       const data = await res.data;
       setUser(data.user);
-      console.log(data);
+      // console.log(data);
       return data;
     }
   };
@@ -30,28 +34,16 @@ const Dashboard = () => {
   useEffect(() => {
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     if (u_id) {
+      // const timer = setTimeout(() => {
       sendRequest(u_id);
+      setLoading(false);
+      // }, 50000);
       // console.log(u_id);
       // console.log(state);
     } else {
       navigate("/");
     }
   }, []);
-
-  const notify = (status, message) => {
-    if (status !== 200) {
-      toast.error(message, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("u_id");
@@ -60,30 +52,38 @@ const Dashboard = () => {
 
   return (
     <>
-      <ToastContainer />
-      {user && (
-        <div className="root">
-          <Typography
-            className="text-center mb-3 mt-3"
-            variant="h4"
-            color="primary"
-          >
-            Welcome to Dashboard
-          </Typography>
-          <Card className="form ms-auto me-auto">
-            <h2>Name: {user.name}</h2>
-            <h4>Email: {user.email}</h4>
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
-          </Card>
-        </div>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Navbar bg="dark" variant="dark">
+          <Container>
+            <Navbar.Brand>
+              {user?.role === 1 ? "Admin Dashboard" : "Dashboard"}
+            </Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <NavDropdown
+                title={user?.name}
+                id="basic-nav-dropdown"
+                className="text-white"
+              >
+                <NavDropdown.Item>Profile</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item>
+                  <Button
+                    variant="light"
+                    style={{ width: "100%" }}
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </NavDropdown.Item>
+              </NavDropdown>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
       )}
+      {user?.role === 1 ? <Admin /> : <User />}
     </>
   );
 };
