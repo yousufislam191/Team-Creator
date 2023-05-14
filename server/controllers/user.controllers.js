@@ -8,7 +8,7 @@ const emailMessage = require("../models/mail.models");
 // for create new user and send email activation notification
 const createNewUser = async (req, res) => {
   const { name, email, password, role } = req.body;
-
+  // const { image } = req.file.filename;
   const token = JWT.sign(
     { name, email, password, role },
     process.env.USER_ACCOUNT_ACTIVATE_KEY,
@@ -19,6 +19,7 @@ const createNewUser = async (req, res) => {
     const info = await sendEmail(emailMessage(email, token));
     // console.log(`"Accepted message: " ${info.accepted}`);
     if (info.accepted) {
+      console.log(image);
       return res.status(200).send({
         message: `A verification email has been sent to this email ${email} .
         Verification email will be expire after 5 Minutes.`,
@@ -76,7 +77,7 @@ const activateCreatedUser = async (req, res) => {
 // for signin
 const userSignInController = async (req, res) => {
   const { email, password } = req.body;
-  let existingUser;
+  let existingUser, user;
   try {
     existingUser = await User.findOne({ email: email });
   } catch (error) {
@@ -94,106 +95,40 @@ const userSignInController = async (req, res) => {
     if (!isPasswordMatches) {
       return res.status(400).json({ message: "Wrong email and password" });
     } else {
-      const token = JWT.sign(
-        {
-          id: existingUser._id,
-          name: existingUser.name,
-        },
-        process.env.USER_LOGIN_KEY,
-        { expiresIn: "35s" }
-      );
-      // console.log("Generated token\n", token);
-
-      if (req.cookies[`${existingUser._id}`]) {
-        req.cookies[`${existingUser._id}`] = "";
+      try {
+        user = await User.findById(existingUser._id, "-password");
+      } catch (error) {
+        // res.status(500).send(error.message);
+        return new Error(error);
       }
-
-      res.cookie(String(existingUser._id), token, {
-        path: "/",
-        expires: new Date(Date.now() + 1000 * 30), // 30 seconds
-        httpOnly: true,
-        sameSite: "lax",
-      });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
       return res
         .status(200)
-        .json({ message: "User signin successfully !!", token: token });
+        .json({ user: user, message: "User signin successfully !!" });
     }
   }
-};
-
-// when user login then firstly verify token then redirect
-const verifyToken = (req, res, next) => {
-  const cookies = req.headers.cookie;
-  const token = cookies.split("=")[1];
-  // console.log(token);
-  if (!token) {
-    return res.status(400).json({ message: "Token not found" });
-  }
-  JWT.verify(String(token), process.env.USER_LOGIN_KEY, (err, user) => {
-    if (err) {
-      return res.status(400).json({ message: "Invalid token", token: token });
-    }
-    // console.log(user.id);
-    req.id = user.id;
-  });
-  next();
 };
 
 const getUser = async (req, res) => {
-  const userId = req.id;
+  const { u_id } = req.body;
   let user;
   try {
-    user = await User.findById(userId, "-password");
+    user = await User.findById(u_id, "-password");
   } catch (error) {
     // res.status(500).send(error.message);
     return new Error(error);
   }
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ message: "server er 179 User not found" });
   }
   return res.status(200).json({ user });
-};
-
-// refresh token and generate new token
-const refreshToken = (req, res, next) => {
-  const cookies = req.headers.cookie;
-  const previousToken = cookies.split("=")[1];
-
-  if (!previousToken) {
-    return res.status(400).json({ message: "Token not found" });
-  }
-
-  JWT.verify(String(previousToken), process.env.USER_LOGIN_KEY, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: "Authentication Failed" });
-    }
-    res.clearCookie(`${user.id}`);
-    req.cookies[`${user.id}`] = "";
-
-    const token = JWT.sign(
-      {
-        id: user.id,
-      },
-      process.env.USER_LOGIN_KEY,
-      { expiresIn: "35s" }
-    );
-    // console.log("Regenerated token", token);
-    res.cookie(String(user.id), token, {
-      path: "/",
-      expires: new Date(Date.now() + 1000 * 30), // 30 seconds
-      httpOnly: true,
-      sameSite: "lax",
-    });
-    req.id = user.id;
-    next();
-  });
 };
 
 module.exports = {
   createNewUser,
   activateCreatedUser,
   userSignInController,
-  verifyToken,
   getUser,
-  refreshToken,
 };

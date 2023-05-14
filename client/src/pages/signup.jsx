@@ -14,11 +14,28 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import style from "../styles/signin.module.css";
+import PreviewSignupImage from "../components/PreviewSignupImage";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
   const userSchema = Yup.object({
+    // image: Yup.mixed()
+    //   .required("Image is required")
+    //   .test(
+    //     "FILE_TYPE",
+    //     "Invalid image",
+    //     (value) =>
+    //       value &&
+    //       [
+    //         "image/jpg",
+    //         "image/jpeg",
+    //         "image/png",
+    //         "image/gif",
+    //         "image/heic",
+    //         "image/HEIC",
+    //       ].includes(value.type)
+    //   ),
     name: Yup.string()
       .required("Name is required")
       .min(3, "Name is too short. Must be at least 3 characters long")
@@ -43,13 +60,14 @@ const SignUp = () => {
 
   const formik = useFormik({
     initialValues: {
+      // image: "",
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
     onSubmit: async (values, helpers) => {
-      // console.log(values.name);
+      // console.log(values);
       const res = await axios
         .post("http://localhost:6001/api/user/register", {
           name: values.name,
@@ -93,10 +111,39 @@ const SignUp = () => {
     <div className={style.root}>
       <ToastContainer />
       <Card className={`${style.form} "ms-auto me-auto"`}>
-        <Typography className="text-center mb-4" variant="h4" color="primary">
+        <Typography className="text-center mb-2" variant="h4" color="primary">
           Registration
         </Typography>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
+          {/* <div className="text-center mb-3 d-flex justify-content-center align-items-center">
+            {formik.values.image ? (
+              <PreviewSignupImage file={formik.values.image} />
+            ) : (
+              <img
+                src="https://img.freepik.com/premium-vector/man-avatar-profile-round-icon_24640-14044.jpg?w=740"
+                className="rounded-circle img-fluid me-3"
+                name="image"
+                alt="loading..."
+                style={{ height: "150px", width: "150px" }}
+              />
+            )}
+            <input
+              required
+              // hidden
+              type="file"
+              name="image"
+              accept=".jpg, .jpeg, .png, .gif, .heic, .HEIC"
+              onChange={(e) => {
+                formik.setFieldValue("image", e.target.files[0]);
+                formik.handleChange;
+              }}
+            ></input>
+            {formik.errors.image && (
+              <p style={{ color: "red", fontSize: "13px", fontWeight: "500" }}>
+                {formik.errors.image}
+              </p>
+            )}
+          </div> */}
           <TextField
             fullWidth
             required

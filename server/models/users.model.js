@@ -3,6 +3,10 @@ const { isEmail, isStrongPassword } = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
+    // image: {
+    //   type: String,
+    //   required: true,
+    // },
     name: {
       type: String,
       required: true,

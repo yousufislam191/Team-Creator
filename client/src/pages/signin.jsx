@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,8 +54,15 @@ const SignIn = () => {
           //   console.log(err);
         });
       if (res) {
+        // console.log(res.data.user);
+        localStorage.setItem("u_id", JSON.stringify(res.data.user._id));
+        const userInfo = res.data.user;
         notify(res.status, res.data.message);
-        // navigate("/dashboard");
+        navigate("/dashboard", {
+          state: {
+            userInfo,
+          },
+        });
       }
     },
     validationSchema: userSchema,
@@ -82,6 +89,13 @@ const SignIn = () => {
           progress: undefined,
           theme: "colored",
         });
+
+  useEffect(() => {
+    const u_id = JSON.parse(localStorage.getItem("u_id"));
+    if (u_id) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   return (
     <div className={style.root}>

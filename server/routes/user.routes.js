@@ -19,7 +19,6 @@ router.post(
   validationHandler,
   userSignInController
 );
-router.get("/fetch-user", verifyToken, getUser);
-router.get("/refresh", refreshToken, verifyToken, getUser);
+router.post("/fetchUser", getUser);
 
 module.exports = router;

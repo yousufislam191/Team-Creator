@@ -4,6 +4,7 @@ import React from "react";
 import NotFoundPage from "../pages/NotFound";
 import SignIn from "../pages/signin";
 import SignUp from "../pages/signup";
+import Dashboard from "../pages/dashboard";
 
 const RouterPath = () => {
   return (
@@ -13,7 +14,7 @@ const RouterPath = () => {
           <Route exact path="/" element={<SignIn />} />
           <Route exact path="/signin" element={<SignIn />} />
           <Route exact path="/signup" element={<SignUp />} />
-          {/* <Route exact path="/dashboard" element={<Dashboard />} /> */}
+          <Route exact path="/dashboard" element={<Dashboard />} />
           <Route exact path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
