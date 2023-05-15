@@ -6,6 +6,7 @@ require("multer");
 require("./config/db");
 
 const userRouter = require("./routes/user.routes");
+const teamRouter = require("./routes/team.routes");
 // const multer = require("multer");
 const app = express();
 app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }));
@@ -28,6 +29,7 @@ app.use(cookieParser());
 // });
 
 app.use("/api/user", userRouter);
+app.use("/api/team", teamRouter);
 
 // app.get("/", (req, res) => {
 //   res.status(200).send("server home route");

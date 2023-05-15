@@ -1,0 +1,35 @@
+const Team = require("../models/team.model");
+
+const checkTeamName = async (req, res) => {
+  const { teamName } = req.body;
+  let existingTeam;
+  try {
+    existingTeam = await Team.findOne({ teamName: teamName });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  if (existingTeam) {
+    return res.status(400).json({
+      message: "This team already exists!!! Please use a different team name",
+    });
+  } else {
+    return res.status(200).json({ message: "Team Name is available" });
+  }
+};
+
+const createNewTeam = async (req, res) => {
+  const { teamName, teamCategory } = req.body;
+  const newTeam = new Team({
+    teamName,
+    teamCategory,
+  });
+
+  try {
+    newTeam.save();
+    return res.status(201).json({ message: "Team is created" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { checkTeamName, createNewTeam };

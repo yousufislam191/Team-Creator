@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { Button, Modal } from "react-bootstrap";
 import { Container } from "react-bootstrap";
 import PopupForm from "./PopupForm";
 import TeamList from "./TeamList";
+import PopupFormSecond from "./PopupFormSecond";
 
 const Admin = () => {
   const [show, setShow] = useState(false);
+  const [showSecond, setShowSecond] = useState(true);
   const handleClose = () => setShow(false);
+  const handleCloseSecond = () => setShowSecond(false);
+
+  const handleTeamName = (teamNameValue) => {
+    console.log(teamNameValue);
+    setShow(false);
+    <PopupFormSecond visible={showSecond} onClose={handleCloseSecond} />;
+  };
 
   return (
     <>
@@ -21,7 +29,11 @@ const Admin = () => {
             + Create a group
           </button>
         </div>
-        <PopupForm visible={show} onClose={handleClose} />
+        <PopupForm
+          visible={show}
+          onClose={handleClose}
+          onTeamName={handleTeamName}
+        />
         <div className="mt-5">
           <TeamList />
         </div>
