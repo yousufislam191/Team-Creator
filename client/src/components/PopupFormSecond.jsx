@@ -1,6 +1,8 @@
 import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-const PopupFormSecond = ({ visible, onClose }) => {
+const PopupFormSecond = ({ visible, onClose, onTeamCategory }) => {
   if (!visible) return null;
   const handleClose = (e) => {
     if (e.target.id === "container") onClose();
@@ -8,27 +10,16 @@ const PopupFormSecond = ({ visible, onClose }) => {
 
   const userSchema = Yup.object({
     teamCategory: Yup.string()
-      .required("Team Name is required")
+      .required("Team Category is required")
       .min(3, "Team Name must be at least 3 characters"),
   });
   const formik = useFormik({
     initialValues: {
       teamCategory: "",
     },
-    onSubmit: async (values, helpers) => {
-      console.log(values);
-      //   const res = await axios
-      //     .post("http://localhost:6001/api/team/checkTeamName", {
-      //         teamCategory: values.teamCategory,
-      //     })
-      //     .catch((err) => {
-      //       notify(err.response.status, err.response.data.message);
-      //       // console.log(err);
-      //     });
-      //   if (res.status === 200) {
-      //     // console.log(res.status);
-      //     onTeamName(values);
-      //   }
+    onSubmit: (values) => {
+      // console.log(values);
+      onTeamCategory(values);
     },
     validationSchema: userSchema,
   });

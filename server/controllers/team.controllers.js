@@ -32,4 +32,20 @@ const createNewTeam = async (req, res) => {
   }
 };
 
-module.exports = { checkTeamName, createNewTeam };
+const getAllTeams = async (req, res) => {
+  let teamlist;
+  try {
+    teamlist = await Team.find({}, { teamName: 1, teamCategory: 1 });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  if (teamlist) {
+    return res.status(200).json({
+      teamlist,
+    });
+  } else {
+    return res.status(400).json({ message: "There are no team available" });
+  }
+};
+
+module.exports = { checkTeamName, createNewTeam, getAllTeams };
