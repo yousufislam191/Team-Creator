@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Team = (props) => {
+  const navigate = useNavigate();
   const { teamName, teamCategory, _id } = props.team;
   return (
     <>
@@ -10,7 +12,10 @@ const Team = (props) => {
         <button
           type="submit"
           className="rounded text-white bg-blue-700 px-4"
-          onClick={() => console.log(_id)}
+          onClick={() => {
+            console.log(_id);
+            navigate(`/dashboard/${_id}`);
+          }}
         >
           Visit
         </button>

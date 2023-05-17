@@ -1,12 +1,11 @@
 import { React, useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
-import { Navbar, Container, NavDropdown } from "react-bootstrap";
 import Loading from "../components/Loading";
 import Admin from "../components/Admin";
 import User from "../components/User";
+import NavigationBar from "../components/Navbar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -55,33 +54,11 @@ const Dashboard = () => {
       {loading ? (
         <Loading />
       ) : (
-        <Navbar bg="dark" variant="dark">
-          <Container>
-            <Navbar.Brand>
-              {user?.role === 1 ? "Admin Dashboard" : "Dashboard"}
-            </Navbar.Brand>
-            <Navbar.Toggle />
-            <Navbar.Collapse className="justify-content-end">
-              <NavDropdown
-                title={user?.name}
-                id="basic-nav-dropdown"
-                className="text-white"
-              >
-                <NavDropdown.Item>Profile</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item>
-                  <Button
-                    variant="light"
-                    style={{ width: "100%" }}
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </Button>
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+        <NavigationBar
+          role={user?.role}
+          name={user?.name}
+          onLogout={handleLogout}
+        />
       )}
       {user?.role === 1 ? <Admin /> : <User />}
     </>
