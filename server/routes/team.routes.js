@@ -2,6 +2,7 @@ const {
   createNewTeam,
   checkTeamName,
   getAllTeams,
+  getSingleTeam,
 } = require("../controllers/team.controllers");
 const { validationHandler } = require("../middleware");
 const {
@@ -23,7 +24,7 @@ router.post(
   validationHandler,
   createNewTeam
 );
-
 router.get("/fetchTeam", getAllTeams);
+router.get("/fetchTeam/:_id", getSingleTeam);
 
 module.exports = router;

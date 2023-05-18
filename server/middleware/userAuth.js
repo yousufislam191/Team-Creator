@@ -72,6 +72,17 @@ const signInValidator = [
     .withMessage("Invalid password"),
 ];
 
+const nameSerchValidator = [
+  check("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Name is missing")
+    .isLength({ min: 1 })
+    .withMessage("Invalid name")
+    .isAlpha("en-US", { ignore: " -" })
+    .withMessage("Name should only contain alphabet and space"),
+];
+
 // // file upload
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -86,4 +97,4 @@ const signInValidator = [
 //   //  limits: { fileSize: 10 * 1024 * 1024 }
 // });
 
-module.exports = { signUpValidator, signInValidator };
+module.exports = { signUpValidator, signInValidator, nameSerchValidator };

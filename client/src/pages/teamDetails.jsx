@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import NavigationBar from "../components/Navbar";
 import { Container } from "react-bootstrap";
 import PopupFormThird from "../components/PopupFormThird";
 import TeamListTable from "../components/TeamListTable";
+import axios from "axios";
 
 const TeamDetails = () => {
   const { id } = useParams();
   const [show, setShow] = useState(false);
+  const [team, setTeam] = useState();
   const [loading, setLoading] = useState(true);
   const [addMember, setAddMember] = useState([]);
 
@@ -22,6 +24,24 @@ const TeamDetails = () => {
     //   setShowSecond(true);
     // }
   };
+
+  const featchSingleTeam = async (id) => {
+    const res = await axios
+      .get(`http://localhost:6001/api/team/fetchTeam/${id}`)
+      .catch((err) => {
+        console.log(err);
+        // return notify(err.response.status, err.response.data.message);
+      });
+    if (res) {
+      const data = await res.data;
+      setTeam(data.teamInfo[0]);
+      // console.log(data);
+    }
+  };
+
+  useEffect(() => {
+    featchSingleTeam(id);
+  }, []);
 
   return (
     <>
@@ -44,7 +64,7 @@ const TeamDetails = () => {
         <div className="d-flex justify-content-between align-items-center mt-3 mb-4">
           <div>
             <h6>Team</h6>
-            <h4 className="font-bold">Team Creator Management System</h4>
+            <h4 className="font-bold">{team?.teamName}</h4>
           </div>
           <div>
             <button

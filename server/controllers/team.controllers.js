@@ -1,4 +1,5 @@
 const Team = require("../models/team.model");
+const User = require("../models/users.model");
 
 const checkTeamName = async (req, res) => {
   const { teamName } = req.body;
@@ -48,4 +49,19 @@ const getAllTeams = async (req, res) => {
   }
 };
 
-module.exports = { checkTeamName, createNewTeam, getAllTeams };
+const getSingleTeam = async (req, res) => {
+  const id = req.params._id;
+  let teamInfo;
+  try {
+    teamInfo = await Team.find({ _id: id });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  if (teamInfo) {
+    return res.status(200).json({ teamInfo });
+  } else {
+    return res.status(400).json({ message: "User not available" });
+  }
+};
+
+module.exports = { checkTeamName, createNewTeam, getAllTeams, getSingleTeam };

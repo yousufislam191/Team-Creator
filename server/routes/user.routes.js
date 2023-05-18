@@ -5,9 +5,14 @@ const {
   verifyToken,
   getUser,
   refreshToken,
+  getUserRoleOne,
 } = require("../controllers/user.controllers");
 const { validationHandler } = require("../middleware");
-const { signUpValidator, signInValidator } = require("../middleware/userAuth");
+const {
+  signUpValidator,
+  signInValidator,
+  nameSerchValidator,
+} = require("../middleware/userAuth");
 
 const router = require("express").Router();
 
@@ -20,5 +25,6 @@ router.post(
   userSignInController
 );
 router.post("/fetchUser", getUser);
+router.post("/search-user-name", nameSerchValidator, getUserRoleOne);
 
 module.exports = router;
