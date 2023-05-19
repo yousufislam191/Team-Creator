@@ -21,8 +21,8 @@ const checkTeamName = async (req, res) => {
 const createNewTeam = async (req, res) => {
   const { teamName, teamCategory } = req.body;
   const newTeam = new Team({
-    teamName,
-    teamCategory,
+    teamName: teamName,
+    teamCategory: teamCategory,
   });
 
   try {
@@ -64,4 +64,53 @@ const getSingleTeam = async (req, res) => {
   }
 };
 
-module.exports = { checkTeamName, createNewTeam, getAllTeams, getSingleTeam };
+const teamJoiningRequest = async (req, res) => {
+  const teamID = req.params.teamID;
+  const { userId, userRole } = req.body;
+
+  let result;
+
+  try {
+    result = await Team.findById(teamID);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+  if (!result) {
+    res.status(404).json({ message: "Team not found" });
+  } else {
+    let existingMemberRequest;
+    try {
+      existingMemberRequest = await Team.findOne({ "members.userId": userId });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+    if (existingMemberRequest) {
+      res.status(404).json({
+        message: "Member joining request already has been sent",
+      });
+    } else {
+      const requestForAddNewMember = {
+        userId,
+        userRole,
+      };
+      result.members.push(requestForAddNewMember);
+      try {
+        result.save();
+        return res.status(201).json({
+          message: "Member joining request has been sent",
+        });
+      } catch (error) {
+        return res.status(500).json({ message: error.message });
+      }
+    }
+  }
+};
+
+module.exports = {
+  checkTeamName,
+  createNewTeam,
+  getAllTeams,
+  getSingleTeam,
+  teamJoiningRequest,
+};

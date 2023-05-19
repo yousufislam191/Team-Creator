@@ -16,9 +16,10 @@ const TeamDetails = () => {
 
   const handleClose = () => setShow(false);
 
-  const handleAddMember = (teamNameValue) => {
-    console.log(teamNameValue);
-    // setAddMember([...addMember, teamNameValue.teamName]);
+  const handleAddMember = (selectMember) => {
+    console.log(selectMember);
+    // setAddMember([...addMember, selectMember]);
+    // console.log(addMember);
     // setShow(false);
     // if (teamNameValue !== null) {
     //   setShowSecond(true);

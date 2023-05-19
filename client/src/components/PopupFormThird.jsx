@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const PopupFormThird = ({ visible, onClose }) => {
+const PopupFormThird = ({ visible, onClose, onAddMember }) => {
   if (!visible) return null;
   const handleClose = (e) => {
     if (e.target.id === "container") onClose();
@@ -16,7 +16,8 @@ const PopupFormThird = ({ visible, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (userId != "" && userRole != "") {
-      console.log(userId, userRole);
+      // console.log(userId, userRole);
+      onAddMember([userId, userRole]);
     } else {
       alert("please fillup the name and role field");
     }

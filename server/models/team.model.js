@@ -35,7 +35,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    members: [memberSchema],
+    members: [
+      {
+        userId: {
+          type: mongoose.Types.ObjectId,
+          ref: "users",
+          unique: true,
+        },
+        userRole: {
+          type: String,
+          // required: true,
+        },
+        status: {
+          type: Boolean,
+          default: false,
+        },
+        rejected: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      {
+        timestamps: true,
+      },
+    ],
   },
   {
     timestamps: true,
