@@ -29,7 +29,8 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
         name: getName,
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
+        throw new Error(err);
       });
     if (res) {
       // console.log(res.data.user);

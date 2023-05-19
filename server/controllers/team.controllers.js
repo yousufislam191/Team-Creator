@@ -87,7 +87,7 @@ const teamJoiningRequest = async (req, res) => {
     }
     if (existingMemberRequest) {
       res.status(404).json({
-        message: "Member joining request already has been sent",
+        message: "Joining request already has been sent",
       });
     } else {
       const requestForAddNewMember = {

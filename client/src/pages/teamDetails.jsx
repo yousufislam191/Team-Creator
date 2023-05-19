@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import Loading from "../components/Loading";
 import NavigationBar from "../components/Navbar";
 import { Container } from "react-bootstrap";
@@ -16,22 +17,32 @@ const TeamDetails = () => {
 
   const handleClose = () => setShow(false);
 
-  const handleAddMember = (selectMember) => {
-    console.log(selectMember);
-    // setAddMember([...addMember, selectMember]);
-    // console.log(addMember);
-    // setShow(false);
-    // if (teamNameValue !== null) {
-    //   setShowSecond(true);
-    // }
+  const handleAddMember = async (selectMember) => {
+    // console.log(selectMember);
+    const res = await axios
+      .post(`http://localhost:6001/api/team/member-team-joining/${id}`, {
+        userId: selectMember[0],
+        userRole: selectMember[1],
+      })
+      .catch((err) => {
+        // console.log(err);
+        return notify(err.response.status, err.response.data.message);
+      });
+    if (res) {
+      const data = await res;
+      if (data.status === 201) {
+        setShow(false);
+      }
+      return notify(data.status, data.data.message);
+    }
   };
 
   const featchSingleTeam = async (id) => {
     const res = await axios
       .get(`http://localhost:6001/api/team/fetchTeam/${id}`)
       .catch((err) => {
-        console.log(err);
-        // return notify(err.response.status, err.response.data.message);
+        // console.log(err);
+        return notify(err.response.status, err.response.data.message);
       });
     if (res) {
       const data = await res.data;
@@ -43,6 +54,42 @@ const TeamDetails = () => {
   useEffect(() => {
     featchSingleTeam(id);
   }, []);
+
+  const notify = (status, message) =>
+    status === 500
+      ? toast.error(message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        })
+      : status === 201
+      ? toast.success(message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        })
+      : status === 404
+      ? toast.warn(message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        })
+      : null;
 
   return (
     <>
@@ -56,6 +103,7 @@ const TeamDetails = () => {
       /> */}
       {/* )} */}
       {/* <h1>{id}</h1> */}
+      <ToastContainer />
       <PopupFormThird
         visible={show}
         onClose={handleClose}
