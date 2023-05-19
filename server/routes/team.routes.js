@@ -4,6 +4,9 @@ const {
   getAllTeams,
   getSingleTeam,
   teamJoiningRequest,
+  pendingRequests,
+  getAddingMembersStatus,
+  activeRequests,
 } = require("../controllers/team.controllers");
 const { validationHandler } = require("../middleware");
 const {
@@ -34,5 +37,7 @@ router.post(
   validationHandler,
   teamJoiningRequest
 );
+router.get("/pending-user", pendingRequests, getAddingMembersStatus);
+router.get("/active-user", activeRequests, getAddingMembersStatus);
 
 module.exports = router;

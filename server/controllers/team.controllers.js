@@ -107,10 +107,72 @@ const teamJoiningRequest = async (req, res) => {
   }
 };
 
+const pendingRequests = async (req, res, next) => {
+  req.value = false;
+  next();
+};
+
+const activeRequests = async (req, res, next) => {
+  req.value = true;
+  next();
+};
+
+const getAddingMembersStatus = async (req, res) => {
+  const value = req.value;
+  let result;
+
+  try {
+    result = await Team.aggregate([
+      { $match: { "members.status": value } },
+      { $unwind: "$members" },
+      { $match: { "members.status": value } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "members.userId",
+          foreignField: "_id",
+          as: "members.user",
+        },
+      },
+      { $unwind: "$members.user" },
+      {
+        $project: {
+          _id: "$_id",
+          "members.user._id": 1,
+          "members.user.name": 1,
+          "members.user.email": 1,
+          "members.userRole": 1,
+          "members.status": 1,
+          "members.rejected": 1,
+          "members._id": 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          members: {
+            $push: "$members",
+          },
+        },
+      },
+    ]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  if (!result) {
+    return res.status(200).json({ message: "There are no pending users" });
+  } else {
+    return res.status(200).json({ result });
+  }
+};
+
 module.exports = {
   checkTeamName,
   createNewTeam,
   getAllTeams,
   getSingleTeam,
   teamJoiningRequest,
+  pendingRequests,
+  getAddingMembersStatus,
+  activeRequests,
 };
