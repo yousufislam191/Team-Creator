@@ -13,8 +13,9 @@ const TeamDetails = () => {
   const [show, setShow] = useState(false);
   const [team, setTeam] = useState();
   const [activeMemberData, setActiveMemberData] = useState();
+  const [pendingMemberData, setPendingMemberData] = useState();
   const [loading, setLoading] = useState(true);
-  const [addMember, setAddMember] = useState([]);
+  const [data, setData] = useState([]);
 
   const handleClose = () => setShow(false);
 
@@ -48,7 +49,23 @@ const TeamDetails = () => {
     if (res) {
       const data = await res.data.result[0].members;
       setActiveMemberData(data);
-      console.log(data);
+      setData(data);
+      // console.log(data);
+    }
+  };
+
+  const fetchPendingMembers = async () => {
+    const res = await axios
+      .get(`http://localhost:6001/api/team/pending-user`)
+      .catch((err) => {
+        // console.log(err);
+        return notify(err.response.status, err.response.data.message);
+      });
+    if (res) {
+      const data = await res.data.result[0].members;
+      setPendingMemberData(data);
+      setData(data);
+      // console.log(data);
     }
   };
 
@@ -64,6 +81,7 @@ const TeamDetails = () => {
       setTeam(data.teamInfo[0]);
       // console.log(data);
       fetchActiveMembers();
+      fetchPendingMembers();
     }
   };
 
@@ -145,50 +163,28 @@ const TeamDetails = () => {
         <div className="flex items-center justify-start gap-3 mb-4">
           <button
             className="rounded text-blue-700 border-2 border-blue-700 bg-white "
-            onClick={() => fetchActiveMembers}
+            onClick={() => fetchActiveMembers()}
           >
             Active members (
             {activeMemberData != "" ? activeMemberData?.length : 0})
           </button>
           <button
-            type="submit"
             className="rounded text-slate-400 border-2 border-slate-400 bg-white "
-            onClick={() => {}}
+            onClick={() => fetchPendingMembers()}
           >
-            Pending members (2)
+            Pending members (
+            {pendingMemberData != "" ? pendingMemberData?.length : 0})
           </button>
           <button
-            type="submit"
             className="rounded text-red-400 border-2 border-red-400 bg-white "
-            onClick={() => {}}
+            onClick={() => console.log("click")}
           >
             Rejected members (2)
           </button>
         </div>
 
         <div className="border-2 border-slate-400 px-4 py-2 rounded">
-          <Table striped>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email ID</th>
-                <th>Role</th>
-                <th>User Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {activeMemberData?.map((value) => (
-                <TeamListTable value={value} key={value._id} />
-              ))}
-            </tbody>
-            {/* <tbody>
-              {activeMemberData
-                ? activeMemberData?.map((value) => (
-                    <TeamListTable value={value} key={value._id} />
-                  ))
-                : "There are no members available"}
-            </tbody> */}
-          </Table>
+          <TeamListTable data={data} />
         </div>
       </Container>
     </>
