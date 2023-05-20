@@ -14,6 +14,7 @@ const TeamDetails = () => {
   const [team, setTeam] = useState();
   const [activeMemberData, setActiveMemberData] = useState();
   const [pendingMemberData, setPendingMemberData] = useState();
+  const [rejectedMemberData, setRejectedMemberData] = useState();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -69,6 +70,26 @@ const TeamDetails = () => {
     }
   };
 
+  const fetchRejectedMembers = async () => {
+    const res = await axios
+      .get(`http://localhost:6001/api/team/rejected-user`)
+      .catch((err) => {
+        console.log(err);
+        return notify(err.response.status, err.response.data.message);
+      });
+    if (res) {
+      // console.log(res);
+      if (res.data.result == "") {
+        setRejectedMemberData(0);
+        setData("");
+      } else {
+        const data = await res.data.result[0].members;
+        setRejectedMemberData(data);
+        setData(data);
+      }
+    }
+  };
+
   const featchSingleTeam = async (id) => {
     const res = await axios
       .get(`http://localhost:6001/api/team/fetchTeam/${id}`)
@@ -82,6 +103,7 @@ const TeamDetails = () => {
       // console.log(data);
       fetchActiveMembers();
       fetchPendingMembers();
+      fetchRejectedMembers();
     }
   };
 
@@ -166,7 +188,7 @@ const TeamDetails = () => {
             onClick={() => fetchActiveMembers()}
           >
             Active members (
-            {activeMemberData != "" ? activeMemberData?.length : 0})
+            {activeMemberData == "" ? 0 : activeMemberData?.length})
           </button>
           <button
             className="rounded text-slate-400 border-2 border-slate-400 bg-white "
@@ -177,14 +199,19 @@ const TeamDetails = () => {
           </button>
           <button
             className="rounded text-red-400 border-2 border-red-400 bg-white "
-            onClick={() => console.log("click")}
+            onClick={() => fetchRejectedMembers()}
           >
-            Rejected members (2)
+            Rejected members (
+            {rejectedMemberData != "" ? rejectedMemberData?.length : 0})
           </button>
         </div>
 
         <div className="border-2 border-slate-400 px-4 py-2 rounded">
-          <TeamListTable data={data} />
+          {data ? (
+            <TeamListTable data={data} />
+          ) : (
+            <h2 className="text-center py-5">No members in this list</h2>
+          )}
         </div>
       </Container>
     </>

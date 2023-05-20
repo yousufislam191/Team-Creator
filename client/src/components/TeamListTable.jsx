@@ -3,7 +3,6 @@ import { Table } from "react-bootstrap";
 
 const TeamListTable = ({ data }) => {
   return (
-    //striped
     <>
       <Table hover className="table-fixed">
         <thead>
@@ -20,7 +19,9 @@ const TeamListTable = ({ data }) => {
               <th>{value.user.name}</th>
               <th>{value.user.email}</th>
               <th>{value.userRole}</th>
-              {value.status === true ? (
+              {value.rejected === true ? (
+                <th className="text-red-600">Rejected</th>
+              ) : value.status === true ? (
                 <th className="text-lime-600">Active</th>
               ) : value.status === false ? (
                 <th className="text-blue-600">Pending</th>

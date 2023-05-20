@@ -108,24 +108,27 @@ const teamJoiningRequest = async (req, res) => {
 };
 
 const pendingRequests = async (req, res, next) => {
-  req.value = false;
+  req.status = false;
+  req.rejected = false;
   next();
 };
 
 const activeRequests = async (req, res, next) => {
-  req.value = true;
+  req.status = true;
+  req.rejected = false;
   next();
 };
 
 const getAddingMembersStatus = async (req, res) => {
-  const value = req.value;
+  const status = req.status;
+  const rejected = req.rejected;
   let result;
 
   try {
     result = await Team.aggregate([
-      { $match: { "members.status": value } },
+      { $match: { "members.status": status, "members.rejected": rejected } },
       { $unwind: "$members" },
-      { $match: { "members.status": value } },
+      { $match: { "members.status": status, "members.rejected": rejected } },
       {
         $lookup: {
           from: "users",
@@ -166,6 +169,54 @@ const getAddingMembersStatus = async (req, res) => {
   }
 };
 
+const getRejectedMembersStatus = async (req, res) => {
+  let result;
+
+  try {
+    result = await Team.aggregate([
+      { $match: { "members.rejected": true } },
+      { $unwind: "$members" },
+      { $match: { "members.rejected": true } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "members.userId",
+          foreignField: "_id",
+          as: "members.user",
+        },
+      },
+      { $unwind: "$members.user" },
+      {
+        $project: {
+          _id: "$_id",
+          "members.user._id": 1,
+          "members.user.name": 1,
+          "members.user.email": 1,
+          "members.userRole": 1,
+          "members.status": 1,
+          "members.rejected": 1,
+          "members._id": 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          members: {
+            $push: "$members",
+          },
+        },
+      },
+    ]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  if (!result) {
+    return res.status(404).json({ message: "There are no rejected users" });
+  } else {
+    return res.status(200).json({ result });
+  }
+};
+
 module.exports = {
   checkTeamName,
   createNewTeam,
@@ -175,4 +226,5 @@ module.exports = {
   pendingRequests,
   getAddingMembersStatus,
   activeRequests,
+  getRejectedMembersStatus,
 };
