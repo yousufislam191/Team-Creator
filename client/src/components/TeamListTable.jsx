@@ -1,10 +1,13 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
-const TeamListTable = () => {
+const TeamListTable = (value) => {
+  console.log(value);
+  const { status, userRole } = value;
+  // const { name, email } = value.user;
   return (
     <>
-      <Table striped>
+      {/* <Table striped>
         <thead>
           <tr>
             <th>Name</th>
@@ -13,27 +16,16 @@ const TeamListTable = () => {
             <th>User Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>@twitter</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </Table>
+        <tbody> */}
+      <tr>
+        {/* <td>value</td> */}
+        <td>{value.user?.name}</td>
+        <td>{value.user?.email}</td>
+        <td>{userRole}</td>
+        <td>{status === true ? "Active" : null}</td>
+      </tr>
+      {/* </tbody>
+      </Table>  */}
     </>
   );
 };

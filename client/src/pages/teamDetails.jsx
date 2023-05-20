@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../components/Loading";
 import NavigationBar from "../components/Navbar";
-import { Container } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import PopupFormThird from "../components/PopupFormThird";
 import TeamListTable from "../components/TeamListTable";
 import axios from "axios";
@@ -12,6 +12,7 @@ const TeamDetails = () => {
   const { id } = useParams();
   const [show, setShow] = useState(false);
   const [team, setTeam] = useState();
+  const [activeMemberData, setActiveMemberData] = useState();
   const [loading, setLoading] = useState(true);
   const [addMember, setAddMember] = useState([]);
 
@@ -37,6 +38,20 @@ const TeamDetails = () => {
     }
   };
 
+  const fetchActiveMembers = async () => {
+    const res = await axios
+      .get(`http://localhost:6001/api/team/active-user`)
+      .catch((err) => {
+        // console.log(err);
+        return notify(err.response.status, err.response.data.message);
+      });
+    if (res) {
+      const data = await res.data.result[0].members;
+      setActiveMemberData(data);
+      console.log(data);
+    }
+  };
+
   const featchSingleTeam = async (id) => {
     const res = await axios
       .get(`http://localhost:6001/api/team/fetchTeam/${id}`)
@@ -48,6 +63,7 @@ const TeamDetails = () => {
       const data = await res.data;
       setTeam(data.teamInfo[0]);
       // console.log(data);
+      fetchActiveMembers();
     }
   };
 
@@ -128,11 +144,11 @@ const TeamDetails = () => {
 
         <div className="flex items-center justify-start gap-3 mb-4">
           <button
-            type="submit"
             className="rounded text-blue-700 border-2 border-blue-700 bg-white "
-            onClick={() => {}}
+            onClick={() => fetchActiveMembers}
           >
-            Active members (15)
+            Active members (
+            {activeMemberData != "" ? activeMemberData?.length : 0})
           </button>
           <button
             type="submit"
@@ -151,7 +167,28 @@ const TeamDetails = () => {
         </div>
 
         <div className="border-2 border-slate-400 px-4 py-2 rounded">
-          <TeamListTable />
+          <Table striped>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email ID</th>
+                <th>Role</th>
+                <th>User Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeMemberData?.map((value) => (
+                <TeamListTable value={value} key={value._id} />
+              ))}
+            </tbody>
+            {/* <tbody>
+              {activeMemberData
+                ? activeMemberData?.map((value) => (
+                    <TeamListTable value={value} key={value._id} />
+                  ))
+                : "There are no members available"}
+            </tbody> */}
+          </Table>
         </div>
       </Container>
     </>

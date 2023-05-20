@@ -160,7 +160,7 @@ const getAddingMembersStatus = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
   if (!result) {
-    return res.status(200).json({ message: "There are no pending users" });
+    return res.status(404).json({ message: "There are no pending users" });
   } else {
     return res.status(200).json({ result });
   }
