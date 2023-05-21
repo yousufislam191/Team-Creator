@@ -9,7 +9,10 @@ const userRouter = require("./routes/user.routes");
 const teamRouter = require("./routes/team.routes");
 // const multer = require("multer");
 const app = express();
-app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" }));
+app.use(
+  cors({ credentials: true, origin: "http://team-creator-server.vercel.app" })
+);
+// app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" })); // for localhost origin
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
