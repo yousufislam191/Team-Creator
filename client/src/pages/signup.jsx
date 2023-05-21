@@ -16,6 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 import style from "../styles/signin.module.css";
 import PreviewSignupImage from "../components/PreviewSignupImage";
 
+import apiHostName from "../config/index.js";
+
 const SignUp = () => {
   const navigate = useNavigate();
 
@@ -69,7 +71,7 @@ const SignUp = () => {
     onSubmit: async (values, helpers) => {
       // console.log(values);
       const res = await axios
-        .post("http://localhost:6001/api/user/register", {
+        .post(`${apiHostName}/user/register`, {
           name: values.name,
           email: values.email,
           password: values.password,

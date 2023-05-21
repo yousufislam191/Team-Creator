@@ -8,6 +8,7 @@ const {
   getAddingMembersStatus,
   activeRequests,
   getRejectedMembersStatus,
+  userPendingRequest,
 } = require("../controllers/team.controllers");
 const { validationHandler } = require("../middleware");
 const {
@@ -41,5 +42,6 @@ router.post(
 router.get("/pending-user", pendingRequests, getAddingMembersStatus);
 router.get("/active-user", activeRequests, getAddingMembersStatus);
 router.get("/rejected-user", getRejectedMembersStatus);
+router.get("/user-pending-request/:userId", userPendingRequest);
 
 module.exports = router;

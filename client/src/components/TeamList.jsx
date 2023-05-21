@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Team from "./Team";
 
+import apiHostName from "../config/index.js";
+
 const TeamList = () => {
   const [teamList, setTeamList] = useState();
   const sendRequest = async () => {
     // console.log(`localStorage id: ${u_id}`);
     const res = await axios
-      .get("http://localhost:6001/api/team/fetchTeam")
+      .get(`${apiHostName}/team/fetchTeam`)
       .catch((err) => {
         console.log(err);
         // return notify(err.response.status, err.response.data.message);

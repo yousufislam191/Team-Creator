@@ -7,6 +7,8 @@ import Admin from "../components/Admin";
 import User from "../components/User";
 import NavigationBar from "../components/Navbar";
 
+import apiHostName from "../config/index.js";
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState();
@@ -15,7 +17,7 @@ const Dashboard = () => {
   const sendRequest = async (u_id) => {
     // console.log(`localStorage id: ${u_id}`);
     const res = await axios
-      .post("http://localhost:6001/api/user/fetchUser", {
+      .post(`${apiHostName}/user/fetchUser`, {
         u_id: u_id,
       })
       .catch((err) => {

@@ -7,6 +7,7 @@ import { Container, Table } from "react-bootstrap";
 import PopupFormThird from "../components/PopupFormThird";
 import TeamListTable from "../components/TeamListTable";
 import axios from "axios";
+import apiHostName from "../config/index.js";
 
 const TeamDetails = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const TeamDetails = () => {
   const handleAddMember = async (selectMember) => {
     // console.log(selectMember);
     const res = await axios
-      .post(`http://localhost:6001/api/team/member-team-joining/${id}`, {
+      .post(`${apiHostName}/team/member-team-joining/${id}`, {
         userId: selectMember[0],
         userRole: selectMember[1],
       })
@@ -42,57 +43,79 @@ const TeamDetails = () => {
 
   const fetchActiveMembers = async () => {
     const res = await axios
-      .get(`http://localhost:6001/api/team/active-user`)
+      .get(`${apiHostName}/team/active-user`)
       .catch((err) => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
     if (res) {
-      const data = await res.data.result[0].members;
-      setActiveMemberData(data);
-      setData(data);
-      // console.log(data);
+      const data = await res.data.result;
+
+      const found = data.find((obj) => {
+        return obj._id === id;
+      });
+      if (found) {
+        setActiveMemberData(found.members);
+        setData(found.members);
+      } else {
+        setActiveMemberData(0);
+        setData("");
+      }
     }
   };
 
   const fetchPendingMembers = async () => {
     const res = await axios
-      .get(`http://localhost:6001/api/team/pending-user`)
+      .get(`${apiHostName}/team/pending-user`)
       .catch((err) => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
     if (res) {
-      const data = await res.data.result[0].members;
-      setPendingMemberData(data);
-      setData(data);
-      // console.log(data);
+      // console.log(res.data);
+      const data = await res.data.result;
+
+      const found = data.find((obj) => {
+        return obj._id === id;
+      });
+      // console.log(found.members);
+      if (found) {
+        setPendingMemberData(found.members);
+        setData(found.members);
+      } else {
+        setPendingMemberData(0);
+        setData("");
+      }
     }
   };
 
   const fetchRejectedMembers = async () => {
     const res = await axios
-      .get(`http://localhost:6001/api/team/rejected-user`)
+      .get(`${apiHostName}/team/rejected-user`)
       .catch((err) => {
         console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
     if (res) {
-      // console.log(res);
-      if (res.data.result == "") {
+      // console.log(res.data.result);
+      const data = await res.data.result;
+
+      const found = data.find((obj) => {
+        return obj._id === id;
+      });
+      if (found) {
+        setRejectedMemberData(found.members);
+        setData(found.members);
+      } else {
         setRejectedMemberData(0);
         setData("");
-      } else {
-        const data = await res.data.result[0].members;
-        setRejectedMemberData(data);
-        setData(data);
       }
     }
   };
 
   const featchSingleTeam = async (id) => {
     const res = await axios
-      .get(`http://localhost:6001/api/team/fetchTeam/${id}`)
+      .get(`${apiHostName}/team/fetchTeam/${id}`)
       .catch((err) => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Team = require("../models/team.model");
 const User = require("../models/users.model");
 
@@ -81,7 +82,10 @@ const teamJoiningRequest = async (req, res) => {
   } else {
     let existingMemberRequest;
     try {
-      existingMemberRequest = await Team.findOne({ "members.userId": userId });
+      existingMemberRequest = await Team.findOne({
+        _id: teamID,
+        "members.userId": userId,
+      });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -99,6 +103,7 @@ const teamJoiningRequest = async (req, res) => {
         result.save();
         return res.status(201).json({
           message: "Member joining request has been sent",
+          result: result,
         });
       } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -126,9 +131,21 @@ const getAddingMembersStatus = async (req, res) => {
 
   try {
     result = await Team.aggregate([
-      { $match: { "members.status": status, "members.rejected": rejected } },
-      { $unwind: "$members" },
-      { $match: { "members.status": status, "members.rejected": rejected } },
+      {
+        $match: {
+          "members.status": status,
+          "members.rejected": rejected,
+        },
+      },
+      {
+        $unwind: "$members",
+      },
+      {
+        $match: {
+          "members.status": status,
+          "members.rejected": rejected,
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -165,7 +182,7 @@ const getAddingMembersStatus = async (req, res) => {
   if (!result) {
     return res.status(404).json({ message: "There are no pending users" });
   } else {
-    return res.status(200).json({ result });
+    return res.status(200).json({ result: result });
   }
 };
 
@@ -217,6 +234,25 @@ const getRejectedMembersStatus = async (req, res) => {
   }
 };
 
+const userPendingRequest = async (req, res) => {
+  const userId = req.params.userId;
+  let result;
+
+  try {
+    result = await Team.find({
+      "members.userId": userId,
+    });
+
+    if (!result) {
+      return res.status(404).json({ message: "No request available" });
+    } else {
+      return res.status(200).json({ result });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   checkTeamName,
   createNewTeam,
@@ -227,4 +263,5 @@ module.exports = {
   getAddingMembersStatus,
   activeRequests,
   getRejectedMembersStatus,
+  userPendingRequest,
 };

@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
         userId: {
           type: mongoose.Types.ObjectId,
           ref: "users",
-          unique: true,
+          // unique: true,
         },
         userRole: {
           type: String,

@@ -6,6 +6,8 @@ import TeamList from "./TeamList";
 import PopupFormSecond from "./PopupFormSecond";
 import axios from "axios";
 
+import apiHostName from "../config/index.js";
+
 const Admin = () => {
   const [show, setShow] = useState(false);
   const [showSecond, setShowSecond] = useState(false);
@@ -40,7 +42,7 @@ const Admin = () => {
   const sendTeamCreateRequest = async (teamValue) => {
     // console.log(teamValue[0], teamValue[1]);
     const res = await axios
-      .post("http://localhost:6001/api/team/create-team", {
+      .post(`${apiHostName}/team/create-team`, {
         teamName: teamValue[0],
         teamCategory: teamValue[1],
       })

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+import apiHostName from "../config/index.js";
+
 const PopupFormThird = ({ visible, onClose, onAddMember }) => {
   if (!visible) return null;
   const handleClose = (e) => {
@@ -25,7 +27,7 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
 
   const sendRequest = async () => {
     const res = await axios
-      .post("http://localhost:6001/api/user/search-user-name", {
+      .post(`${apiHostName}/user/search-user-name`, {
         name: getName,
       })
       .catch((err) => {

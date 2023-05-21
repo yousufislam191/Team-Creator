@@ -21,6 +21,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import style from "../styles/signin.module.css";
 
+import apiHostName from "../config/index.js";
+
 const SignIn = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -45,7 +47,7 @@ const SignIn = () => {
     onSubmit: async (values, helpers) => {
       //   console.log(values);
       const res = await axios
-        .post("http://localhost:6001/api/user/signin", {
+        .post(`${apiHostName}/user/signin`, {
           email: values.email,
           password: values.password,
         })

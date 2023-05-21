@@ -4,6 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import * as Yup from "yup";
 import axios from "axios";
 
+import apiHostName from "../config/index.js";
+
 const PopupForm = ({ visible, onClose, onTeamName }) => {
   if (!visible) return null;
   const handleClose = (e) => {
@@ -22,7 +24,7 @@ const PopupForm = ({ visible, onClose, onTeamName }) => {
     onSubmit: async (values, helpers) => {
       // console.log(values);
       const res = await axios
-        .post("http://localhost:6001/api/team/checkTeamName", {
+        .post(`${apiHostName}/team/checkTeamName`, {
           teamName: values.teamName,
         })
         .catch((err) => {

@@ -1,13 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import UserPendingRequest from "./UserPendingRequest";
+import axios from "axios";
+
+import apiHostName from "../config/index.js";
 
 const User = () => {
   const [showPendingRquest, setShowPendingRquest] = useState(false);
+  const [userId, setUserId] = useState();
+  const [userPendingData, setuserPendingData] = useState();
 
   const pendingRquest = () => {
     setShowPendingRquest(true);
   };
+
+  const getPendingRequest = async (u_id) => {
+    const res = await axios
+      .get(`${apiHostName}/team/user-pending-request/${u_id}`)
+      .catch((err) => {
+        console.log(err);
+        // return notify(err.response.status, err.response.data.message);
+      });
+    if (res) {
+      const data = await res.data.result;
+      setuserPendingData(data);
+      // if (data.status === 201) {
+      //   setShow(false);
+      // }
+      // return notify(data.status, data.data.message);
+      // console.log(res.data.result);
+    }
+  };
+
+  useEffect(() => {
+    const u_id = JSON.parse(localStorage.getItem("u_id"));
+    // console.log(u_id);
+    setUserId(u_id);
+    getPendingRequest(u_id);
+  }, []);
 
   return (
     <>
@@ -32,13 +62,17 @@ const User = () => {
                 pendingRquest();
               }}
             >
-              Pending Request (0)
+              Pending Request (
+              {userPendingData == "" ? 0 : userPendingData?.length})
             </button>
           )}
         </div>
 
         {showPendingRquest ? (
-          <UserPendingRequest />
+          <UserPendingRequest
+            userId={userId}
+            userPendingData={userPendingData}
+          />
         ) : (
           <div>
             <h4 className="font-bold mb-3">Your Team</h4>
