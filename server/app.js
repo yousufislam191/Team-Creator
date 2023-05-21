@@ -2,12 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-require("multer");
 require("./config/db");
 
 const userRouter = require("./routes/user.routes");
 const teamRouter = require("./routes/team.routes");
-// const multer = require("multer");
 const app = express();
 app.use(
   cors({ credentials: true, origin: "http://team-creator-server.vercel.app" })
@@ -16,20 +14,6 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-// file upload
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./assets/userImages/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
-// const uploadFile = multer({
-//   storage: storage,
-//   //  limits: { fileSize: 10 * 1024 * 1024 }
-// });
 
 app.use("/api/user", userRouter);
 app.use("/api/team", teamRouter);

@@ -8,7 +8,6 @@ const emailMessage = require("../models/mail.models");
 // for create new user and send email activation notification
 const createNewUser = async (req, res) => {
   const { name, email, password, role } = req.body;
-  // const { image } = req.file.filename;
   const token = JWT.sign(
     { name, email, password, role },
     process.env.USER_ACCOUNT_ACTIVATE_KEY,
@@ -17,9 +16,7 @@ const createNewUser = async (req, res) => {
 
   try {
     const info = await sendEmail(emailMessage(email, token));
-    // console.log(`"Accepted message: " ${info.accepted}`);
     if (info.accepted) {
-      // console.log(image);
       return res.status(200).send({
         message: `A verification email has been sent to this email ${email} .
         Verification email will be expire after 5 Minutes.`,

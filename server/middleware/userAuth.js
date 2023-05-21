@@ -1,14 +1,9 @@
 const { check } = require("express-validator");
 const createError = require("http-errors");
-// const multer = require("multer");
 
 const User = require("../models/users.model");
 
 const signUpValidator = [
-  // check("image")
-  //   // .trim()
-  //   .notEmpty()
-  //   .withMessage("Image is missing"),
   check("name")
     .trim()
     .notEmpty()
@@ -82,19 +77,5 @@ const nameSerchValidator = [
     .isAlpha("en-US", { ignore: " -" })
     .withMessage("Name should only contain alphabet and space"),
 ];
-
-// // file upload
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "../assets/userImages/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
-// const uploadFile = multer({
-//   storage: storage,
-//   //  limits: { fileSize: 10 * 1024 * 1024 }
-// });
 
 module.exports = { signUpValidator, signInValidator, nameSerchValidator };

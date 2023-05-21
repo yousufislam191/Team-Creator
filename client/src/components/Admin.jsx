@@ -53,7 +53,6 @@ const Admin = () => {
     if (res) {
       notify(res.status, res.data.message);
       setShowSecond(false);
-      // teamValue.slice(0, -2);
     }
   };
 

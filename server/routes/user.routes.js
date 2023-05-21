@@ -2,9 +2,7 @@ const {
   createNewUser,
   activateCreatedUser,
   userSignInController,
-  verifyToken,
   getUser,
-  refreshToken,
   getUserRoleOne,
 } = require("../controllers/user.controllers");
 const { validationHandler } = require("../middleware");

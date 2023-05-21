@@ -35,12 +35,8 @@ const Dashboard = () => {
   useEffect(() => {
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     if (u_id) {
-      // const timer = setTimeout(() => {
       sendRequest(u_id);
       setLoading(false);
-      // }, 50000);
-      // console.log(u_id);
-      // console.log(state);
     } else {
       navigate("/");
     }

@@ -24,11 +24,6 @@ const User = () => {
     if (res) {
       const data = await res.data.result;
       setuserPendingData(data);
-      // if (data.status === 201) {
-      //   setShow(false);
-      // }
-      // return notify(data.status, data.data.message);
-      // console.log(res.data.result);
     }
   };
 

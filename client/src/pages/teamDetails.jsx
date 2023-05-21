@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import Loading from "../components/Loading";
-import NavigationBar from "../components/Navbar";
-import { Container, Table } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import PopupFormThird from "../components/PopupFormThird";
 import TeamListTable from "../components/TeamListTable";
 import axios from "axios";
@@ -16,7 +14,6 @@ const TeamDetails = () => {
   const [activeMemberData, setActiveMemberData] = useState();
   const [pendingMemberData, setPendingMemberData] = useState();
   const [rejectedMemberData, setRejectedMemberData] = useState();
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   const handleClose = () => setShow(false);
@@ -172,16 +169,6 @@ const TeamDetails = () => {
 
   return (
     <>
-      {/* {loading ? (
-        <Loading />
-      ) : ( */}
-      {/* <NavigationBar
-        role={user?.role}
-        name={user?.name}
-        onLogout={handleLogout}
-      /> */}
-      {/* )} */}
-      {/* <h1>{id}</h1> */}
       <ToastContainer />
       <PopupFormThird
         visible={show}

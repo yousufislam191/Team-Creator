@@ -1,6 +1,4 @@
-const mongoose = require("mongoose");
 const Team = require("../models/team.model");
-const User = require("../models/users.model");
 
 const checkTeamName = async (req, res) => {
   const { teamName } = req.body;

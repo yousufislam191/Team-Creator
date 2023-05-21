@@ -107,35 +107,6 @@ const UserPendingRequest = ({ userId, userPendingData }) => {
             </div>
             // }
           ))}
-
-          {/* <div className="w-full bg-white rounded-lg px-4 py-3 flex justify-between items-center">
-            <div className="flex items-center gap-16">
-              <div>
-                <h5 className="font-bold">Team Name</h5>
-                <p className="-mb-0">Team Category</p>
-              </div>
-              <div className="h-14 min-h-[1em] w-0.5 self-stretch bg-neutral-400 opacity-100 dark:opacity-50"></div>
-              <div>
-                <h4 className="font-bold">User Role</h4>
-              </div>
-            </div>
-            <div className="sm:flex items-center justify-content-between sm:gap-5">
-              <button
-                type="submit"
-                className="rounded bg-red-600 text-white "
-                onClick={() => {}}
-              >
-                Reject
-              </button>
-              <button
-                type="submit"
-                className="rounded bg-blue-600 text-white "
-                onClick={() => {}}
-              >
-                Accept
-              </button>
-            </div>
-          </div> */}
         </div>
       </Container>
     </>
