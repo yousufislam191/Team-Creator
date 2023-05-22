@@ -6,10 +6,11 @@ const emailMessage = (email, token) => {
     text: "Verify your account", // plain text body
     html: `
     <h3>Thanks for registering Team Creator System</h3>
-    <h4>Please verify your email to continue...<a href="http://localhost:6001/api/email-activate?token=${token}">verify your email</a></h4>
+    <h4>Please verify your email to continue...<a href="http://team-creator-server.vercel.app/api/email-activate?token=${token}">verify your email</a></h4>
     `, // html body
   };
 };
 module.exports = emailMessage;
 
 // <p>${process.env.CLIENT_URL}/authentication/activation/${token}</p>
+// <h4>Please verify your email to continue...<a href="http://localhost:6001/api/email-activate?token=${token}">verify your email</a></h4>
