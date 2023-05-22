@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { Container } from "react-bootstrap";
 import PopupFormThird from "../components/PopupFormThird";
@@ -15,6 +15,7 @@ const TeamDetails = () => {
   const [pendingMemberData, setPendingMemberData] = useState();
   const [rejectedMemberData, setRejectedMemberData] = useState();
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
 
@@ -176,12 +177,18 @@ const TeamDetails = () => {
         onAddMember={handleAddMember}
       />
       <Container>
-        <div className="d-flex justify-content-between align-items-center mt-3 mb-4">
+        <div className="md:flex justify-between items-center mt-3 mb-4">
           <div>
             <h6>Team</h6>
             <h4 className="font-bold">{team?.teamName}</h4>
           </div>
-          <div>
+          <div className="flex justify-between items-center gap-3">
+            <button
+              className="rounded text-blue-700 border-2 border-blue-700 bg-white "
+              onClick={() => navigate("/dashboard")}
+            >
+              Back
+            </button>
             <button
               type="submit"
               className="rounded text-blue-700 border-2 border-blue-700 bg-white "
@@ -216,11 +223,13 @@ const TeamDetails = () => {
           </button>
         </div>
 
-        <div className="border-2 border-slate-400 px-4 py-2 rounded">
+        <div>
           {data ? (
             <TeamListTable data={data} />
           ) : (
-            <h2 className="text-center py-5">No members in this list</h2>
+            <h2 className="text-center py-5 border-2 border-slate-400 rounded-lg">
+              No members in this list
+            </h2>
           )}
         </div>
       </Container>

@@ -97,8 +97,7 @@ const Admin = () => {
         <div className="d-flex justify-content-between align-items-center mt-3">
           <h2>Team Creator Management System</h2>
           <button
-            type="button"
-            className="px-5 py-2 bg-white text-blue-700 rounded border-blue-700"
+            className="rounded text-blue-700 border-2 border-blue-700 bg-white "
             onClick={() => setShow(true)}
           >
             + Create a group
