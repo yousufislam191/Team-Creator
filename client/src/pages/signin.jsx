@@ -53,7 +53,7 @@ const SignIn = () => {
         })
         .catch((err) => {
           notify(err.response.status, err.response.data.message);
-          console.log(err);
+          // console.log(err);
         });
       if (res) {
         // console.log(res.data.user);
