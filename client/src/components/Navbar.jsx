@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navbar, Container, NavDropdown } from "react-bootstrap";
-import { Button } from "@material-ui/core";
 
 const NavigationBar = ({ role, name, onLogout }) => {
+  const [isClicked, setIsClicked] = useState(false);
+  const handleClick = () => {
+    setIsClicked((prevState) => !prevState);
+  };
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="dark" variant="dark" className="w-full">
         <Container>
           <Navbar.Brand>
             {role === 1 ? "Admin Dashboard" : "Dashboard"}
@@ -14,24 +17,24 @@ const NavigationBar = ({ role, name, onLogout }) => {
           <Navbar.Collapse className="justify-content-end">
             <NavDropdown
               title={name}
-              id="basic-nav-dropdown"
-              className="text-white"
-            >
-              <NavDropdown.Item>Profile</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item>
-                <Button
-                  variant="light"
-                  style={{ width: "100%" }}
-                  onClick={onLogout}
-                >
-                  Logout
-                </Button>
-              </NavDropdown.Item>
-            </NavDropdown>
+              disabled
+              className="text-white cursor-pointer"
+              onClick={handleClick}
+            ></NavDropdown>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {isClicked ? (
+        <div className="absolute z-10 top-10 md:top-12 right-2 sm:right-10 text-left border-2 rounded-lg bg-white w-max md:w-36">
+          <button
+            type="submit"
+            className="px-3 text-blue-600"
+            onClick={onLogout}
+          >
+            Logout
+          </button>
+        </div>
+      ) : null}
     </>
   );
 };
