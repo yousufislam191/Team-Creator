@@ -22,9 +22,11 @@ import * as Yup from "yup";
 import style from "../styles/signin.module.css";
 
 import apiHostName from "../config/index.js";
+import Loading from "../components/Loading";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -55,6 +57,7 @@ const SignIn = () => {
           notify(err.response.status, err.response.data.message);
           // console.log(err);
         });
+      setLoading(true);
       if (res) {
         // console.log(res.data.user);
         localStorage.setItem("u_id", JSON.stringify(res.data.user._id));
@@ -93,9 +96,10 @@ const SignIn = () => {
         });
 
   useEffect(() => {
+    setLoading(true);
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     if (u_id) {
-      navigate("/dashboard");
+      loading ? navigate("/dashboard") : <Loading />;
     }
   }, []);
 
