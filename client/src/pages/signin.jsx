@@ -99,90 +99,93 @@ const SignIn = () => {
     setLoading(true);
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     if (u_id) {
-      loading ? navigate("/dashboard") : <Loading />;
+      navigate("/dashboard");
     }
   }, []);
 
   return (
-    <div className={style.root}>
-      <ToastContainer />
-      <Card className={`${style.form} "ms-auto me-auto"`}>
-        <Typography className="text-center mb-3" variant="h4" color="primary">
-          Login
-        </Typography>
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            required
-            className="mb-3"
-            name="email"
-            type="email"
-            variant="outlined"
-            label="Email"
-            autoComplete="on"
-            error={formik.errors.email}
-            onChange={formik.handleChange}
-            helperText={formik.errors.email}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailRounded color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            fullWidth
-            required
-            className="mb-2"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            variant="outlined"
-            label="Password"
-            error={formik.errors.password}
-            onChange={formik.handleChange}
-            helperText={formik.errors.password}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockRounded color="primary" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                  >
-                    {showPassword ? (
-                      <Visibility color="primary" />
-                    ) : (
-                      <VisibilityOff color="primary" />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button fullWidth variant="contained" color="primary" type="submit">
-            Sign in
-          </Button>
-        </form>
-        <div className="text-center">
-          <Typography variant="overline">Don't have an account ?</Typography>
-          <Button
-            color="primary"
-            disableElevation
-            onClick={() => {
-              navigate("/signup");
-            }}
-            style={{ backgroundColor: "transparent", textAlign: "left" }}
-          >
-            Sign up
-          </Button>
-        </div>
-      </Card>
-    </div>
+    <>
+      {loading ? null : <Loading />}
+      <div className={style.root}>
+        <ToastContainer />
+        <Card className={`${style.form} "ms-auto me-auto"`}>
+          <Typography className="text-center mb-3" variant="h4" color="primary">
+            Login
+          </Typography>
+          <form onSubmit={formik.handleSubmit}>
+            <TextField
+              fullWidth
+              required
+              className="mb-3"
+              name="email"
+              type="email"
+              variant="outlined"
+              label="Email"
+              autoComplete="on"
+              error={formik.errors.email}
+              onChange={formik.handleChange}
+              helperText={formik.errors.email}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailRounded color="primary" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              fullWidth
+              required
+              className="mb-2"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              variant="outlined"
+              label="Password"
+              error={formik.errors.password}
+              onChange={formik.handleChange}
+              helperText={formik.errors.password}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockRounded color="primary" />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                    >
+                      {showPassword ? (
+                        <Visibility color="primary" />
+                      ) : (
+                        <VisibilityOff color="primary" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button fullWidth variant="contained" color="primary" type="submit">
+              Sign in
+            </Button>
+          </form>
+          <div className="text-center">
+            <Typography variant="overline">Don't have an account ?</Typography>
+            <Button
+              color="primary"
+              disableElevation
+              onClick={() => {
+                navigate("/signup");
+              }}
+              style={{ backgroundColor: "transparent", textAlign: "left" }}
+            >
+              Sign up
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </>
   );
 };
 
