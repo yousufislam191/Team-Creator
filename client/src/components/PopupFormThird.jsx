@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import apiHostName from "../config/index.js";
+import Loading from "./Loading.jsx";
 
 const PopupFormThird = ({ visible, onClose, onAddMember }) => {
   if (!visible) return null;
@@ -14,6 +15,7 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
   const [addName, setAddName] = useState();
   const [userId, setUserId] = useState();
   const [userName, setUserName] = useState();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,6 +36,7 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
         // console.log(err);
         throw new Error(err);
       });
+    setLoading(true);
     if (res) {
       // console.log(res.data.user);
       setAddName(res.data.user);
@@ -70,19 +73,23 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
                 placeholder="Type user name to assign group member"
               />
               <div className="max-h-32 overflow-auto mb-3">
-                {addName?.map((value) => (
-                  <div
-                    key={value._id}
-                    className="rounded px-3 py-2 mb-3 align-middle bg-slate-100 cursor-pointer"
-                    onClick={() => {
-                      setUserId(value._id);
-                      setUserName(value.name);
-                    }}
-                  >
-                    <p className="font-bold">{value.name}</p>
-                    <p className="-mt-4 -mb-0">{value.email}</p>
-                  </div>
-                ))}
+                {loading ? (
+                  addName?.map((value) => (
+                    <div
+                      key={value._id}
+                      className="rounded px-3 py-2 mb-3 align-middle bg-slate-100 cursor-pointer"
+                      onClick={() => {
+                        setUserId(value._id);
+                        setUserName(value.name);
+                      }}
+                    >
+                      <p className="font-bold">{value.name}</p>
+                      <p className="-mt-4 -mb-0">{value.email}</p>
+                    </div>
+                  ))
+                ) : (
+                  <Loading />
+                )}
               </div>
               <input
                 type="text"

@@ -12,7 +12,7 @@ import apiHostName from "../config/index.js";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const sendRequest = async (u_id) => {
     // console.log(`localStorage id: ${u_id}`);
@@ -24,6 +24,7 @@ const Dashboard = () => {
         console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
+    setLoading(true);
     if (res) {
       const data = await res.data;
       setUser(data.user);
@@ -36,7 +37,7 @@ const Dashboard = () => {
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     if (u_id) {
       sendRequest(u_id);
-      setLoading(false);
+      // setLoading(true);
     } else {
       navigate("/");
     }
@@ -50,13 +51,13 @@ const Dashboard = () => {
   return (
     <>
       {loading ? (
-        <Loading />
-      ) : (
         <NavigationBar
           role={user?.role}
           name={user?.name}
           onLogout={handleLogout}
         />
+      ) : (
+        <Loading />
       )}
       {user?.role === 1 ? <Admin /> : <User />}
     </>

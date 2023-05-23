@@ -9,6 +9,7 @@ import apiHostName from "../config/index.js";
 
 const TeamDetails = () => {
   const { id } = useParams();
+  const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [team, setTeam] = useState();
   const [activeMemberData, setActiveMemberData] = useState();
@@ -30,6 +31,7 @@ const TeamDetails = () => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
+    setLoading(true);
     if (res) {
       const data = await res;
       if (data.status === 201) {
@@ -46,6 +48,7 @@ const TeamDetails = () => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
+    setLoading(true);
     if (res) {
       const data = await res.data.result;
 
@@ -69,6 +72,7 @@ const TeamDetails = () => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
+    setLoading(true);
     if (res) {
       // console.log(res.data);
       const data = await res.data.result;
@@ -94,6 +98,7 @@ const TeamDetails = () => {
         console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
+    setLoading(true);
     if (res) {
       // console.log(res.data.result);
       const data = await res.data.result;
@@ -118,6 +123,7 @@ const TeamDetails = () => {
         // console.log(err);
         return notify(err.response.status, err.response.data.message);
       });
+    setLoading(true);
     if (res) {
       const data = await res.data;
       setTeam(data.teamInfo[0]);
@@ -225,7 +231,7 @@ const TeamDetails = () => {
 
         <div>
           {data ? (
-            <TeamListTable data={data} />
+            <TeamListTable data={data} loading={loading} />
           ) : (
             <h2 className="text-center py-5 border-2 border-slate-400 rounded-lg">
               No members in this list
