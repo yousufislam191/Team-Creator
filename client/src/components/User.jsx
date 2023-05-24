@@ -31,6 +31,14 @@ const User = () => {
     }
   };
 
+  const handleAccept = async (userId) => {
+    console.log(`Accept: ${userId}`);
+  };
+
+  const handleReject = async (userId) => {
+    console.log(`Reject: ${userId}`);
+  };
+
   useEffect(() => {
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     // console.log(u_id);
@@ -43,7 +51,7 @@ const User = () => {
       {loading ? (
         <Container>
           <div className="d-flex justify-content-between align-items-center mt-3 mb-5">
-            <h2>Team Creator Management System</h2>
+            <h2 className="me-3">Team Creator Management System</h2>
             {showPendingRquest ? (
               <button
                 type="submit"
@@ -78,8 +86,9 @@ const User = () => {
 
           {showPendingRquest ? (
             <UserPendingRequest
-              userId={userId}
               userPendingData={userPendingData}
+              onAccept={handleAccept}
+              onReject={handleReject}
             />
           ) : (
             <div>
