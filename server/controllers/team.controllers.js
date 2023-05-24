@@ -1,3 +1,4 @@
+const ObjectId = require("mongodb").ObjectId;
 const Team = require("../models/team.model");
 
 const checkTeamName = async (req, res) => {
@@ -237,9 +238,19 @@ const userPendingRequest = async (req, res) => {
   let result;
 
   try {
-    result = await Team.find({
-      "members.userId": userId,
-    });
+    result = await Team.aggregate([
+      { $match: { "members.userId": new ObjectId(userId) } },
+      { $unwind: "$members" },
+      { $match: { "members.userId": new ObjectId(userId) } },
+      {
+        $group: {
+          _id: "$_id",
+          teamName: { $first: "$teamName" },
+          teamCategory: { $first: "$teamCategory" },
+          members: { $push: "$members" },
+        },
+      },
+    ]);
 
     if (!result) {
       return res.status(404).json({ message: "No request available" });

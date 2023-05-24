@@ -64,7 +64,7 @@ const UserPendingRequest = ({ userId, userPendingData }) => {
               {setMemberData(data?.members)}
               <div className="flex items-center gap-16">
                 <div>
-                  <h5 className="font-bold">{data?.teamName}</h5>
+                  <h5 className="font-bold text-sm">{data?.teamName}</h5>
                   <p className="-mb-0">{data?.teamCategory}</p>
                 </div>
                 <div className="h-14 min-h-[1em] w-0.5 self-stretch bg-neutral-400 opacity-100 dark:opacity-50"></div>
