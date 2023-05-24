@@ -37,7 +37,6 @@ const Dashboard = () => {
     const u_id = JSON.parse(localStorage.getItem("u_id"));
     if (u_id) {
       sendRequest(u_id);
-      // setLoading(true);
     } else {
       navigate("/");
     }

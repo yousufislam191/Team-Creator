@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { Container } from "react-bootstrap";
+import { CSpinner } from "@coreui/react";
 import PopupFormThird from "../components/PopupFormThird";
 import TeamListTable from "../components/TeamListTable";
 import axios from "axios";
@@ -37,6 +38,7 @@ const TeamDetails = () => {
       if (data.status === 201) {
         setShow(false);
       }
+      fetchActiveMembers();
       return notify(data.status, data.data.message);
     }
   };
@@ -210,22 +212,46 @@ const TeamDetails = () => {
             className="rounded text-blue-700 border-2 border-blue-700 bg-white "
             onClick={() => fetchActiveMembers()}
           >
-            Active members (
-            {activeMemberData == "" ? 0 : activeMemberData?.length})
+            Active members
+            {loading ? (
+              activeMemberData == "" ? (
+                " (0)"
+              ) : (
+                ` (${activeMemberData?.length})`
+              )
+            ) : (
+              <CSpinner size="sm" />
+            )}
           </button>
           <button
             className="rounded text-slate-400 border-2 border-slate-400 bg-white "
             onClick={() => fetchPendingMembers()}
           >
-            Pending members (
-            {pendingMemberData != "" ? pendingMemberData?.length : 0})
+            Pending members
+            {loading ? (
+              pendingMemberData != "" ? (
+                ` (${pendingMemberData?.length})`
+              ) : (
+                " (0)"
+              )
+            ) : (
+              <CSpinner size="sm" />
+            )}
           </button>
           <button
             className="rounded text-red-400 border-2 border-red-400 bg-white "
             onClick={() => fetchRejectedMembers()}
           >
-            Rejected members (
-            {rejectedMemberData != "" ? rejectedMemberData?.length : 0})
+            Rejected members{" "}
+            {loading ? (
+              rejectedMemberData != "" ? (
+                ` (${rejectedMemberData?.length})`
+              ) : (
+                " (0)"
+              )
+            ) : (
+              <CSpinner size="sm" />
+            )}
           </button>
         </div>
 
