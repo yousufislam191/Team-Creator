@@ -44,7 +44,7 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
   };
 
   useEffect(() => {
-    sendRequest();
+    getName != "" ? sendRequest() : null;
   }, [getName]);
 
   return (
@@ -61,9 +61,7 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col">
-              <p className="mb-2 text-slate-400">
-                Add new member to join group
-              </p>
+              <p className="mb-2">Add new member to join group</p>
               <input
                 type="text"
                 name="userName"
@@ -72,25 +70,25 @@ const PopupFormThird = ({ visible, onClose, onAddMember }) => {
                 className="border border-indigo-500/100 p-2 rounded mb-3"
                 placeholder="Type user name to assign group member"
               />
-              <div className="max-h-32 overflow-auto mb-3">
-                {loading ? (
-                  addName?.map((value) => (
-                    <div
-                      key={value._id}
-                      className="rounded px-3 py-2 mb-3 align-middle bg-slate-100 cursor-pointer"
-                      onClick={() => {
-                        setUserId(value._id);
-                        setUserName(value.name);
-                      }}
-                    >
-                      <p className="font-bold">{value.name}</p>
-                      <p className="-mt-4 -mb-0">{value.email}</p>
-                    </div>
-                  ))
-                ) : (
-                  <Loading />
-                )}
-              </div>
+              {getName ? (
+                <div className="max-h-32 overflow-auto mb-3">
+                  {loading
+                    ? addName?.map((value) => (
+                        <div
+                          key={value._id}
+                          className="rounded px-3 py-2 mb-3 align-middle bg-slate-100 cursor-pointer"
+                          onClick={() => {
+                            setUserId(value._id);
+                            setUserName(value.name);
+                          }}
+                        >
+                          <p className="font-bold">{value.name}</p>
+                          <p className="-mt-4 -mb-0">{value.email}</p>
+                        </div>
+                      ))
+                    : null}
+                </div>
+              ) : null}
               <input
                 type="text"
                 name="userRole"
