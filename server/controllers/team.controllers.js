@@ -233,8 +233,22 @@ const getRejectedMembersStatus = async (req, res) => {
   }
 };
 
-const userPendingRequest = async (req, res) => {
-  const userId = req.params.userId;
+const signleUserTeamPendingRequest = async (req, res, next) => {
+  req.userId = req.params.userId;
+  req.status = false;
+  next();
+};
+
+const signleUserTeamActive = async (req, res, next) => {
+  req.userId = req.params.userId;
+  req.status = true;
+  next();
+};
+
+const userAddedTeam = async (req, res) => {
+  const userId = req.userId;
+  const status = req.status;
+
   let result;
 
   try {
@@ -242,14 +256,16 @@ const userPendingRequest = async (req, res) => {
       {
         $match: {
           "members.userId": new ObjectId(userId),
-          "members.status": false,
+          "members.status": status,
+          "members.rejected": false,
         },
       },
       { $unwind: "$members" },
       {
         $match: {
           "members.userId": new ObjectId(userId),
-          "members.status": false,
+          "members.status": status,
+          "members.rejected": false,
         },
       },
       {
@@ -293,7 +309,28 @@ const userAcceptingRequest = async (req, res) => {
   }
 };
 
-const userRejectingRequest = async (req, res) => {};
+const userRejectingRequest = async (req, res) => {
+  const { memberId } = req.body;
+  let result;
+
+  try {
+    result = await Team.updateOne(
+      { "members._id": memberId },
+      { $set: { "members.$.rejected": true } }
+    );
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: "Something were wrong. Please try again" });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "You have declined this request from the team" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   checkTeamName,
@@ -305,7 +342,9 @@ module.exports = {
   getAddingMembersStatus,
   activeRequests,
   getRejectedMembersStatus,
-  userPendingRequest,
+  signleUserTeamPendingRequest,
+  signleUserTeamActive,
+  userAddedTeam,
   userAcceptingRequest,
   userRejectingRequest,
 };

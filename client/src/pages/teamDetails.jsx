@@ -11,6 +11,7 @@ import apiHostName from "../config/index.js";
 const TeamDetails = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState();
   const [show, setShow] = useState(false);
   const [team, setTeam] = useState();
   const [activeMemberData, setActiveMemberData] = useState();
@@ -136,7 +137,30 @@ const TeamDetails = () => {
     }
   };
 
+  const sendRequest = async (u_id) => {
+    const res = await axios
+      .post(`${apiHostName}/user/fetchUser`, {
+        u_id: u_id,
+      })
+      .catch((err) => {
+        // console.log(err);
+        return notify(err.response.status, err.response.data.message);
+      });
+    setLoading(true);
+    if (res) {
+      const data = await res.data.user.role;
+      setUserRole(data);
+    }
+  };
+
   useEffect(() => {
+    const u_id = JSON.parse(localStorage.getItem("u_id"));
+    if (u_id) {
+      sendRequest(u_id);
+    } else {
+      navigate("/");
+    }
+
     featchSingleTeam(id);
   }, []);
 
@@ -197,13 +221,15 @@ const TeamDetails = () => {
             >
               Back
             </button>
-            <button
-              type="submit"
-              className="rounded text-blue-700 border-2 border-blue-700 bg-white "
-              onClick={() => setShow(true)}
-            >
-              Add members
-            </button>
+            {userRole === 1 ? (
+              <button
+                type="submit"
+                className="rounded text-blue-700 border-2 border-blue-700 bg-white "
+                onClick={() => setShow(true)}
+              >
+                Add members
+              </button>
+            ) : null}
           </div>
         </div>
 
@@ -223,36 +249,41 @@ const TeamDetails = () => {
               <CSpinner size="sm" />
             )}
           </button>
-          <button
-            className="rounded text-slate-400 border-2 border-slate-400 bg-white "
-            onClick={() => fetchPendingMembers()}
-          >
-            Pending members
-            {loading ? (
-              pendingMemberData != "" ? (
-                ` (${pendingMemberData?.length})`
+
+          {userRole === 1 ? (
+            <button
+              className="rounded text-slate-400 border-2 border-slate-400 bg-white "
+              onClick={() => fetchPendingMembers()}
+            >
+              Pending members
+              {loading ? (
+                pendingMemberData != "" ? (
+                  ` (${pendingMemberData?.length})`
+                ) : (
+                  " (0)"
+                )
               ) : (
-                " (0)"
-              )
-            ) : (
-              <CSpinner size="sm" />
-            )}
-          </button>
-          <button
-            className="rounded text-red-400 border-2 border-red-400 bg-white "
-            onClick={() => fetchRejectedMembers()}
-          >
-            Rejected members{" "}
-            {loading ? (
-              rejectedMemberData != "" ? (
-                ` (${rejectedMemberData?.length})`
+                <CSpinner size="sm" />
+              )}
+            </button>
+          ) : null}
+          {userRole === 1 ? (
+            <button
+              className="rounded text-red-400 border-2 border-red-400 bg-white "
+              onClick={() => fetchRejectedMembers()}
+            >
+              Rejected members{" "}
+              {loading ? (
+                rejectedMemberData != "" ? (
+                  ` (${rejectedMemberData?.length})`
+                ) : (
+                  " (0)"
+                )
               ) : (
-                " (0)"
-              )
-            ) : (
-              <CSpinner size="sm" />
-            )}
-          </button>
+                <CSpinner size="sm" />
+              )}
+            </button>
+          ) : null}
         </div>
 
         <div>

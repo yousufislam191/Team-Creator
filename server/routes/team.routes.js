@@ -8,9 +8,11 @@ const {
   getAddingMembersStatus,
   activeRequests,
   getRejectedMembersStatus,
-  userPendingRequest,
   userAcceptingRequest,
   userRejectingRequest,
+  signleUserTeamPendingRequest,
+  userAddedTeam,
+  signleUserTeamActive,
 } = require("../controllers/team.controllers");
 const { validationHandler } = require("../middleware");
 const {
@@ -44,8 +46,13 @@ router.post(
 router.get("/pending-user", pendingRequests, getAddingMembersStatus);
 router.get("/active-user", activeRequests, getAddingMembersStatus);
 router.get("/rejected-user", getRejectedMembersStatus);
-router.get("/user-pending-request/:userId", userPendingRequest);
+router.get(
+  "/user-pending-request/:userId",
+  signleUserTeamPendingRequest,
+  userAddedTeam
+);
+router.get("/user-team-active/:userId", signleUserTeamActive, userAddedTeam);
 router.patch("/user-accepting-request", userAcceptingRequest);
-router.delete("/user-rejecting-request", userRejectingRequest);
+router.patch("/user-rejecting-request", userRejectingRequest);
 
 module.exports = router;
