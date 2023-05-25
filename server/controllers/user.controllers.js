@@ -46,19 +46,10 @@ const activateCreatedUser = async (req, res) => {
       process.env.USER_ACCOUNT_ACTIVATE_KEY,
       (err, decodedToken) => {
         if (err) {
+          return res
+            .status(400)
+            .json({ message: "Link has been expired!!..." });
           // return res.status(400).render("../views/tokenExpire.ejs", {});
-          return ejs.renderFile(
-            "../views/tokenExpire.ejs",
-            {},
-            {},
-            function (err, template) {
-              if (err) {
-                throw err;
-              } else {
-                res.end(template);
-              }
-            }
-          );
         }
         const { name, email, password } = decodedToken;
         const hashpassword = bcrypt.hashSync(password);
@@ -69,19 +60,8 @@ const activateCreatedUser = async (req, res) => {
         });
         try {
           newUser.save();
+          return res.status(201).json({ message: "Activated your account" });
           // return res.status(201).render("../views/tokenActive.ejs", {});
-          return ejs.renderFile(
-            "../views/tokenActive.ejs",
-            {},
-            {},
-            function (err, template) {
-              if (err) {
-                throw err;
-              } else {
-                res.end(template);
-              }
-            }
-          );
         } catch (error) {
           return res.status(500).send({
             message: error.message,
