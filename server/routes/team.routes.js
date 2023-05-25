@@ -9,6 +9,8 @@ const {
   activeRequests,
   getRejectedMembersStatus,
   userPendingRequest,
+  userAcceptingRequest,
+  userRejectingRequest,
 } = require("../controllers/team.controllers");
 const { validationHandler } = require("../middleware");
 const {
@@ -43,5 +45,7 @@ router.get("/pending-user", pendingRequests, getAddingMembersStatus);
 router.get("/active-user", activeRequests, getAddingMembersStatus);
 router.get("/rejected-user", getRejectedMembersStatus);
 router.get("/user-pending-request/:userId", userPendingRequest);
+router.patch("/user-accepting-request", userAcceptingRequest);
+router.delete("/user-rejecting-request", userRejectingRequest);
 
 module.exports = router;

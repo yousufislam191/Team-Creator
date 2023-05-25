@@ -122,8 +122,8 @@ const TeamDetails = () => {
     const res = await axios
       .get(`${apiHostName}/team/fetchTeam/${id}`)
       .catch((err) => {
-        // console.log(err);
-        return notify(err.response.status, err.response.data.message);
+        console.log(err);
+        // return notify(err.response.status, err.response.data.message);
       });
     setLoading(true);
     if (res) {

@@ -53,7 +53,7 @@ const getSingleTeam = async (req, res) => {
   const id = req.params._id;
   let teamInfo;
   try {
-    teamInfo = await Team.find({ _id: id });
+    teamInfo = await Team.find({ _id: new ObjectId(id) });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -239,9 +239,19 @@ const userPendingRequest = async (req, res) => {
 
   try {
     result = await Team.aggregate([
-      { $match: { "members.userId": new ObjectId(userId) } },
+      {
+        $match: {
+          "members.userId": new ObjectId(userId),
+          "members.status": false,
+        },
+      },
       { $unwind: "$members" },
-      { $match: { "members.userId": new ObjectId(userId) } },
+      {
+        $match: {
+          "members.userId": new ObjectId(userId),
+          "members.status": false,
+        },
+      },
       {
         $group: {
           _id: "$_id",
@@ -262,6 +272,29 @@ const userPendingRequest = async (req, res) => {
   }
 };
 
+const userAcceptingRequest = async (req, res) => {
+  const { memberId } = req.body;
+  let result;
+
+  try {
+    result = await Team.updateOne(
+      { "members._id": memberId },
+      { $set: { "members.$.status": true } }
+    );
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: "Something were wrong. Please try again" });
+    } else {
+      return res.status(200).json({ message: "You request has been accepted" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const userRejectingRequest = async (req, res) => {};
+
 module.exports = {
   checkTeamName,
   createNewTeam,
@@ -273,4 +306,6 @@ module.exports = {
   activeRequests,
   getRejectedMembersStatus,
   userPendingRequest,
+  userAcceptingRequest,
+  userRejectingRequest,
 };
