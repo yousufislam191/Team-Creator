@@ -7,18 +7,20 @@ require("./config/db");
 const userRouter = require("./routes/user.routes");
 const teamRouter = require("./routes/team.routes");
 const app = express();
+app.set("view engine", "ejs");
 app.use(cors({ credentials: true, origin: "https://team-creator.vercel.app" }));
 // app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" })); // for localhost origin
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use("/api/user", userRouter);
 app.use("/api/team", teamRouter);
 
-// app.get("/", (req, res) => {
-//   res.status(200).send("server home route");
-// });
+app.get("/", (req, res) => {
+  res.status(200).send("<h1>Something is wrong</h1>");
+});
 app.use((req, res, next) => {
   res.status(404).send("Page not found");
   res.end();
