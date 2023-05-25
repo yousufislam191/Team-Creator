@@ -7,9 +7,9 @@ const emailMessage = require("../models/mail.models");
 
 // for create new user and send email activation notification
 const createNewUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
   const token = JWT.sign(
-    { name, email, password, role },
+    { name, email, password },
     process.env.USER_ACCOUNT_ACTIVATE_KEY,
     { expiresIn: "5m" }
   );
@@ -47,13 +47,12 @@ const activateCreatedUser = async (req, res) => {
         if (err) {
           return res.status(400).json({ message: "Link has been expired." });
         }
-        const { name, email, password, role } = decodedToken;
+        const { name, email, password } = decodedToken;
         const hashpassword = bcrypt.hashSync(password);
         const newUser = new User({
           name,
           email,
           password: hashpassword,
-          role,
         });
         try {
           newUser.save();

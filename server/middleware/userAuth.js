@@ -41,12 +41,12 @@ const signUpValidator = [
     .withMessage(
       "Password is not a strong. Must be one uppercase, lowercase, number and special characters"
     ),
-  check("role")
-    .trim()
-    .notEmpty()
-    .withMessage("Role is missing")
-    .matches(/\d/)
-    .withMessage("Role must be digits"),
+  // check("role")
+  //   .trim()
+  //   .notEmpty()
+  //   .withMessage("Role is missing")
+  //   .matches(/\d/)
+  //   .withMessage("Role must be digits"),
 ];
 
 const signInValidator = [

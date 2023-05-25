@@ -59,8 +59,8 @@ const SignUp = () => {
           password: values.password,
         })
         .catch((err) => {
-          notify(err.response.status, err.response.data.errors.email.msg);
-          //   console.log(err);
+          // notify(err.response.status, err.response.data.errors.email.msg);
+          console.log(err);
         });
       if (res) {
         notify(res.status, res.data.message);
