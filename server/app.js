@@ -8,8 +8,9 @@ const userRouter = require("./routes/user.routes");
 const teamRouter = require("./routes/team.routes");
 const app = express();
 app.set("view engine", "ejs");
-app.use(cors({ credentials: true, origin: "https://team-creator.vercel.app" }));
-// app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" })); // for localhost origin
+app.set("views", "views");
+// app.use(cors({ credentials: true, origin: "https://team-creator.vercel.app" }));
+app.use(cors({ credentials: true, origin: "http://127.0.0.1:5173" })); // for localhost origin
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(bodyParser.json());
