@@ -9,7 +9,7 @@ const teamRouter = require("./routes/team.routes");
 const app = express();
 
 app.use(express.static("public"));
-app.set("views", "views");
+app.set("views", "./views");
 app.set("view engine", "ejs");
 
 app.use(cors({ credentials: true, origin: "https://team-creator.vercel.app" }));
